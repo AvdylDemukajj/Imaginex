@@ -1,8 +1,15 @@
 import React from 'react'
+import FriendRequests from './FriendRequests'
+import Birthday from './Birthday'
+import Ad from './Ad'
 
-const RightMenu = () => {
+const RightMenu = ({ userId }:{ userId?:string }) => {
   return (
-    <div>RightMenu</div>
+    <div className='flex flex-col gap-6'>
+      <FriendRequests />
+      <Birthday />
+      <Ad />
+    </div>
   )
 }
 
