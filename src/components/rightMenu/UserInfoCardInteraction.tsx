@@ -36,7 +36,6 @@ const UserInfoCardInteraction = ({userId,currentUserId,isUserBlocked,isFollowing
             following: state.following && false,
             followingRequestSent: !state.following && !state.followingRequestSent ? true : false,
         })
-
     )
 
   return (
