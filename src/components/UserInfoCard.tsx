@@ -63,24 +63,24 @@ const UserInfoCard = async ({user}: {user: User}) => {
             <p>{user.description}</p>
           }
           {user.city && <div className='flex items-center gap-2'>
-            <Image src='/map.png' alt='Map' width={16} height={16}/>
+            <Image src='/map.png' alt='' width={16} height={16}/>
             <span>Living in <b>{user.city}</b></span>
           </div>}
           {user.school && <div className='flex items-center gap-2'>
-            <Image src='/school.png' alt='School' width={16} height={16}/>
+            <Image src='/school.png' alt='' width={16} height={16}/>
             <span>Went to <b>{user.school}</b></span>
           </div>}
           {user.work && <div className='flex items-center gap-2'>
-            <Image src='/work.png' alt='Work' width={16} height={16}/>
+            <Image src='/work.png' alt='' width={16} height={16}/>
             <span>Works at <b>{user.work}</b></span>
           </div>}
           <div className='flex items-center justify-between'>
             {user.website && <div className='flex gap-1 items-center'>
-              <Image src='/link.png' alt='Link' width={16} height={16}/>
+              <Image src='/link.png' alt='' width={16} height={16}/>
               <Link href={user.website} className='text-blue-500 font-medium'>{user.website}</Link>
             </div>}
             <div className='flex gap-1 items-center'>
-              <Image src='/date.png' alt='Date' width={16} height={16}/>
+              <Image src='/date.png' alt='' width={16} height={16}/>
               <span>Joined {formattedDate}</span>
             </div>
           </div>
