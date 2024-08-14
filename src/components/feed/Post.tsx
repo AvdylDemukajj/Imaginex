@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import React from 'react'
-import Comments from './feed/Comments'
+import Comments from './Comments'
+
 
 const Post = () => {
   return (
