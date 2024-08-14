@@ -14,7 +14,7 @@ const UserMediaCard = ({user}: {user: User}) => {
     {/* BOTTOM */}
         <div className='flex gap-4 justify-between flex-wrap'>
           <div className='relative w-1/5 h-24'>
-            <Image src='/' alt='RequestFriend' fill className='object-contain rounded-md'/>
+            <Image src='/' alt='' fill className='object-contain rounded-md'/>
           </div>
 
         </div>
