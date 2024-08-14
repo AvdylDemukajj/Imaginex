@@ -1,9 +1,51 @@
+import prisma from '@/lib/prisma'
+import { auth } from '@clerk/nextjs/server'
 import { User } from '@prisma/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 
-const UserInfoCard = ({user}: {user: User}) => {
+const UserInfoCard = async ({user}: {user: User}) => {
+
+  const createdAtDate = new Date(user.createdAt)
+  const formattedDate = createdAtDate.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
+  let isUserBlocked = false
+  let isFollowing = false
+  let isFollowingSent = false
+
+  const { userId: currentUserId } = auth()
+
+  if(currentUserId){
+    const blockRes = await prisma.block.findFirst({
+      where: {
+        blockerId: currentUserId,
+        blockedId: user.id,
+      },
+    })
+    blockRes ? (isUserBlocked = true) : (isUserBlocked = false)
+
+    const followRes = await prisma.follower.findFirst({
+      where: {
+        followerId: currentUserId,
+        followingId: user.id,
+      },
+    })
+    followRes ? (isFollowing = true) : (isFollowing = false)
+
+    const followReqRes = await prisma.followRequest.findFirst({
+      where: {
+        senderId: currentUserId,
+        receiverId: user.id,
+      },
+    })
+    followReqRes ? (isFollowingSent = true) : (isFollowingSent = false)
+  }
+
   return (
     <div className='p-4 bg-white rounded-lg shadow-md text-sm flex flex-col gap-4'>
     {/* TOP */}
@@ -14,30 +56,32 @@ const UserInfoCard = ({user}: {user: User}) => {
         {/* BOTTOM */}
         <div className='flex flex-col gap-4 text-gray-500'>
           <div className='flex items-center gap-2'>
-            <span className='text-xl text-black'>Name Surname</span>
-            <span className='text-sm'>Username</span>
+            <span className='text-xl text-black'>{(user.name && user.surname) ? user.name + " " + user.surname : user.username}</span>
+            <span className='text-sm'>@{user.username}</span>
           </div>
-          <p>Description</p>
-          <div className='flex items-center gap-2'>
+          {user.description && 
+            <p>{user.description}</p>
+          }
+          {user.city && <div className='flex items-center gap-2'>
             <Image src='/map.png' alt='Map' width={16} height={16}/>
-            <span>Living in <b>Prishtin</b></span>
-          </div>
-          <div className='flex items-center gap-2'>
+            <span>Living in <b>{user.city}</b></span>
+          </div>}
+          {user.school && <div className='flex items-center gap-2'>
             <Image src='/school.png' alt='School' width={16} height={16}/>
-            <span>Went to <b>UBT</b></span>
-          </div>
-          <div className='flex items-center gap-2'>
+            <span>Went to <b>{user.school}</b></span>
+          </div>}
+          {user.work && <div className='flex items-center gap-2'>
             <Image src='/work.png' alt='Work' width={16} height={16}/>
-            <span>Works at <b>Google</b></span>
-          </div>
+            <span>Works at <b>{user.work}</b></span>
+          </div>}
           <div className='flex items-center justify-between'>
-            <div className='flex gap-1 items-center'>
+            {user.website && <div className='flex gap-1 items-center'>
               <Image src='/link.png' alt='Link' width={16} height={16}/>
-              <Link href="" className='text-blue-500 font-medium'>Protofolio.dev</Link>
-            </div>
+              <Link href={user.website} className='text-blue-500 font-medium'>{user.website}</Link>
+            </div>}
             <div className='flex gap-1 items-center'>
               <Image src='/date.png' alt='Date' width={16} height={16}/>
-              <span>Joined Neser</span>
+              <span>Joined {formattedDate}</span>
             </div>
           </div>
           <button className='bg-blue-500 text-white text-sm rounded-md p-2'>Follow</button>
