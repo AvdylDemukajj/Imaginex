@@ -1,5 +1,6 @@
 "use client"
-import React from 'react'
+import { switchFollow } from '@/lib/actions'
+import React, { useState } from 'react'
 
 const UserInfoCardInteraction = ({userId,currentUserId,isUserBlocked,isFollowing,isFollowingSent}:{
     userId:string
@@ -8,13 +9,33 @@ const UserInfoCardInteraction = ({userId,currentUserId,isUserBlocked,isFollowing
     isFollowing:boolean
     isFollowingSent:boolean
 }) => {
+
+    const [userState, setUserState] = useState({
+        following: isFollowing,
+        blocked: isUserBlocked,
+        followingRequestSent: isFollowingSent,
+    })
+
+    const follow = async () => {
+        try {
+            await switchFollow(userId);
+            setUserState(prev=>({
+                ...prev, 
+                following: prev.following && false,
+                followingRequestSent: !prev.following && !prev.followingRequestSent ? true : false,
+            }));
+        } catch (error) {
+            
+        }
+    }
+
   return (
     <>
-    <form action="">
-        <button className='w-full bg-blue-500 text-white text-sm rounded-md p-2'>{isFollowing ? "Following" : isFollowingSent ? "Friend Request Sent" : "Follow"}</button>
+    <form action={follow}>
+        <button className='w-full bg-blue-500 text-white text-sm rounded-md p-2'>{userState.following ? "Following" : userState.followingRequestSent ? "Friend Request Sent" : "Follow"}</button>
     </form>
     <form action="" className='self-end '>
-        <span className='text-red-400 text-sm cursor-pointer'>{isUserBlocked ? "Unblock User" : "Block User"}</span>
+        <span className='text-red-400 text-sm cursor-pointer'>{userState.blocked ? "Unblock User" : "Block User"}</span>
     </form>
     </>
   )
