@@ -1,12 +1,30 @@
 "use client";
 
+import { acceptFollowRequest } from '@/lib/actions';
 import { FollowRequest, User } from '@prisma/client';
 import Image from 'next/image';
-import React from 'react'
+import React, { useOptimistic, useState } from 'react'
 
 type RequestWithUser = FollowRequest & {sender: User}
 
 const FriendRequestList =({requests}:{requests: RequestWithUser[]}) => {
+
+    const [requestState, setRequestState] = useState(requests);
+
+    const accept = async (requestId: number, userId: string) => {
+      removeOptimisticRequest(requestId);
+      try {
+        await acceptFollowRequest(userId);
+        setRequestState((prev) => prev.filter((req) => req.id !== requestId));
+      } catch (err) {}
+    };
+
+  
+    const [optimisticRequests, removeOptimisticRequest] = useOptimistic(
+        requestState,
+        (state, value: number) => state.filter((req) => req.id !== value)
+      );
+
   return (
     <div className=''>
         {requests.map(request => (
