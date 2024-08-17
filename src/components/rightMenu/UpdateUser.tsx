@@ -44,7 +44,7 @@ const UpdateUser = ({ user }: { user: User }) => {
             </div>
             {/* COVER PIC UPLOAD */}
             <CldUploadWidget
-              uploadPreset="social"
+              uploadPreset="Imaginex"
               onSuccess={(result) => setCover(result.info)}
             >
               {({ open }) => {
