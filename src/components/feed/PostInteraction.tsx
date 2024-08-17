@@ -12,7 +12,15 @@ const PostInteraction = ({postId, likes, commentNumber}:{postId:number, likes:st
         isLiked: userId ? likes.includes(userId) : false
     })
 
-
+    const [optimisticLike, switchOptimisticLike] = useOptimistic(
+        likeState,
+        (state, value) => {
+          return {
+            likeCount: state.isLiked ? state.likeCount - 1 : state.likeCount + 1,
+            isLiked: !state.isLiked,
+          };
+        }
+      );
     
 
   return (
