@@ -1,26 +1,22 @@
-import prisma from '@/lib/prisma'
-import Image from 'next/image'
-import React from 'react'
-import CommentList from './CommentList'
-
+import prisma from "@/lib/prisma";
+import CommentList from "./CommentList";
 
 const Comments = async ({postId}:{postId:number}) => {
 
-    const comments = await prisma.comment.findMany({
-        where: {
-            postId,
-        },
-        include: {
-            user: true,
-        },
-    })
-
+  const comments = await prisma.comment.findMany({
+    where:{
+      postId,
+    },
+    include:{
+      user:true
+    }
+  })
   return (
-    <div className=''>
-        {/* WRITE */}
-        <CommentList comments={comments} postId={postId} />
+    <div className="">
+      {/* WRITE */}
+      <CommentList comments={comments} postId={postId}/>
     </div>
-  )
-}
+  );
+};
 
-export default Comments
+export default Comments;
