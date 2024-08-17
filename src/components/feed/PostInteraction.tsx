@@ -3,6 +3,7 @@
 import { useAuth } from '@clerk/nextjs';
 import Image from 'next/image';
 import React, { useOptimistic, useState } from 'react'
+import { switchLike } from "@/lib/actions";
 
 const PostInteraction = ({postId, likes, commentNumber}:{postId:number, likes:string[], commentNumber:number}) => {
 
@@ -21,6 +22,17 @@ const PostInteraction = ({postId, likes, commentNumber}:{postId:number, likes:st
           };
         }
       );
+
+      const likeAction = async () => {
+        switchOptimisticLike("");
+        try {
+          switchLike(postId);
+          setLikeState((state) => ({
+            likeCount: state.isLiked ? state.likeCount - 1 : state.likeCount + 1,
+            isLiked: !state.isLiked,
+          }));
+        } catch (err) {}
+      };
     
 
   return (
