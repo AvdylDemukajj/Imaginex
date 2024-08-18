@@ -1,38 +1,37 @@
 "use client";
 
-import { acceptFollowRequest, declineFollowRequest } from '@/lib/actions';
-import { FollowRequest, User } from '@prisma/client';
-import Image from 'next/image';
-import React, { useOptimistic, useState } from 'react'
+import { acceptFollowRequest, declineFollowRequest } from "@/lib/actions";
+import { FollowRequest, User } from "@prisma/client";
+import Image from "next/image";
+import { useOptimistic, useState } from "react";
 
-type RequestWithUser = FollowRequest & {sender: User}
+type RequestWithUser = FollowRequest & {
+  sender: User;
+};
 
-const FriendRequestList =({requests}:{requests: RequestWithUser[]}) => {
+const FriendRequestList = ({ requests }: { requests: RequestWithUser[] }) => {
+  const [requestState, setRequestState] = useState(requests);
 
-    const [requestState, setRequestState] = useState(requests);
+  const accept = async (requestId: number, userId: string) => {
+    removeOptimisticRequest(requestId);
+    try {
+      await acceptFollowRequest(userId);
+      setRequestState((prev) => prev.filter((req) => req.id !== requestId));
+    } catch (err) {}
+  };
+  const decline = async (requestId: number, userId: string) => {
+    removeOptimisticRequest(requestId);
+    try {
+      await declineFollowRequest(userId);
+      setRequestState((prev) => prev.filter((req) => req.id !== requestId));
+    } catch (err) {}
+  };
 
-    const accept = async (requestId: number, userId: string) => {
-      removeOptimisticRequest(requestId);
-      try {
-        await acceptFollowRequest(userId);
-        setRequestState((prev) => prev.filter((req) => req.id !== requestId));
-      } catch (err) {}
-    };
-
-    const decline = async (requestId: number, userId: string) => {
-        removeOptimisticRequest(requestId);
-        try {
-          await declineFollowRequest(userId);
-          setRequestState((prev) => prev.filter((req) => req.id !== requestId));
-        } catch (err) {}
-      };
-  
-    const [optimisticRequests, removeOptimisticRequest] = useOptimistic(
-        requestState,
-        (state, value: number) => state.filter((req) => req.id !== value)
-      );
-
-return (
+  const [optimisticRequests, removeOptimisticRequest] = useOptimistic(
+    requestState,
+    (state, value: number) => state.filter((req) => req.id !== value)
+  );
+  return (
     <div className="">
       {optimisticRequests.map((request) => (
         <div className="flex items-center justify-between" key={request.id}>
@@ -80,4 +79,4 @@ return (
   );
 };
 
-export default FriendRequestList
+export default FriendRequestList;
