@@ -33,6 +33,10 @@ const StoryList = ({
     } catch (err) {}
   };
 
+  const [optimisticStories, addOptimisticStory] = useOptimistic(
+    storyList,
+    (state, value: StoryWithUser) => [value, ...state]
+  );
 
   return (
     <>
