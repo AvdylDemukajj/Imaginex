@@ -1,40 +1,48 @@
+"use client";
+
 import prisma from '@/lib/prisma';
-import { auth } from '@clerk/nextjs/server';
+import { useUser } from '@clerk/nextjs';
 import Image from 'next/image'
 import React from 'react'
 
 const AddPost = () => {
 
-    const { userId } = auth()
+    const { user, isLoaded } = useUser()
+
+    if(!isLoaded) {
+        return "Loading..."
+    }
+
+
 
   return (
     <div className='p-4 bg-white shadow-md rounded-lg flex gap-4 justify-between text-sm'>
         {/* AVATAR */}
-        <Image src='' alt='Avatar' width={40} height={40} className='w-12 h-12 object-cover rounded-full'/>
+        <Image src={user?.imageUrl || "/noAvatar.png"} alt='' width={40} height={40} className='w-12 h-12 object-cover rounded-full'/>
         {/* POST */}
         <div className='flex-1'>
             {/* TEXT INPUT */}
             <form action="" className='flex gap-4'>
                 <textarea placeholder="What's on your mind?" className='bg-slate-100 rounded-lg flex-1 p-2' name='desc'></textarea>
-                <Image src='/emoji.png' alt='Avatar' width={20} height={20} className='w-5 h-5 cursor-pointer self-end'/>
+                <Image src='/emoji.png' alt='' width={20} height={20} className='w-5 h-5 cursor-pointer self-end'/>
                 <button>Send</button>
             </form>
             {/* POST OPSIONS */}
             <div className='flex items-center gap-4 mt-4 text-gray-400 flex-wrap'>
                 <div className='flex items-center gap-2 cursor-pointer'>
-                    <Image src='/addimage.png' alt='AddImage' width={20} height={20} />
+                    <Image src='/addimage.png' alt='' width={20} height={20} />
                     Photo
                 </div>
                 <div className='flex items-center gap-2 cursor-pointer'>
-                    <Image src='/addVideo.png' alt='AddVideo' width={20} height={20} />
+                    <Image src='/addVideo.png' alt='' width={20} height={20} />
                     Video
                 </div>
                 <div className='flex items-center gap-2 cursor-pointer'>
-                    <Image src='/poll.png' alt='Poll' width={20} height={20} />
+                    <Image src='/poll.png' alt='' width={20} height={20} />
                     Poll
                 </div>
                 <div className='flex items-center gap-2 cursor-pointer'>
-                    <Image src='/addevent.png' alt='AddEvent' width={20} height={20} />
+                    <Image src='/addevent.png' alt='' width={20} height={20} />
                     Event
                 </div>
             </div>
