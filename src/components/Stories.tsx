@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
-
+import StoryList from "./StoryList";
 
 const Stories = async () => {
   const { userId: currentUserId } = auth();
@@ -35,7 +35,7 @@ const Stories = async () => {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md overflow-scroll text-xs scrollbar-hide">
       <div className="flex gap-8 w-max">
-
+        <StoryList stories={stories} userId={currentUserId}/>
       </div>
     </div>
   );
